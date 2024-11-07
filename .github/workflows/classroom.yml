@@ -1,0 +1,40 @@
+name: Autograding Tests
+'on':
+- push
+- repository_dispatch
+permissions:
+  checks: write
+  actions: read
+  contents: read
+jobs:
+  run-autograding-tests:
+    runs-on: ubuntu-latest
+    if: github.actor != 'github-classroom[bot]'
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: Testando inputs
+      id: testando-inputs
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: Testando inputs
+        setup-command: ''
+        command: make test-inputs
+        timeout: 2
+        max-score: 7
+    - name: Testando uso da alocação
+      id: testando-uso-da-alocacao
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: Testando uso da alocação
+        setup-command: ''
+        command: make test-alloc
+        timeout: 1
+        max-score: 3
+    - name: Autograding Reporter
+      uses: classroom-resources/autograding-grading-reporter@v1
+      env:
+        TESTANDO-INPUTS_RESULTS: "${{steps.testando-inputs.outputs.result}}"
+        TESTANDO-USO-DA-ALOCACAO_RESULTS: "${{steps.testando-uso-da-alocacao.outputs.result}}"
+      with:
+        runners: testando-inputs,testando-uso-da-alocacao
