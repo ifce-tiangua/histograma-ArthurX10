@@ -2,7 +2,10 @@ echo "Testando (1)..."
 echo
 
 output=$(./a.out < ./testes/input1.txt)
-expected_output="3 ***\n4 ****\n2 **\n1 *"
+expected_output="3 ***
+4 ****
+2 **
+1 *"
 
 if [ $? -eq 0 ] ; then
   echo "Running ok: Program exited zero"
